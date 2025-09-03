@@ -1,0 +1,39 @@
+.navbar-fixed {
+  position: fixed !important;
+  width: 100% !important;
+  z-index: 40 !important;
+  transition: all 0.3s !important;
+}
+
+.navbar-fixed-scrolled {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  backdrop-filter: blur(12px) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.navbar-fixed-not-scrolled {
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+
+.container-fixed {
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+  max-width: 1400px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.nav-link-fixed {
+  color: hsl(var(--foreground)) !important;
+  transition: color 0.3s !important;
+}
+
+.nav-link-fixed:hover {
+  color: hsl(var(--primary)) !important;
+}

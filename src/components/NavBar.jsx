@@ -1,6 +1,7 @@
-import { cn } from "@/lib/util";
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import './navbar-fix.css';
+import ThemeToggle from "./ThemeToggle";
 
 const navItems = [
   { name: "Home", href: "#hero" },
@@ -26,12 +27,9 @@ const NavBar = () => {
 
   return (
     <nav
-      className={cn(
-        "fixed w-full z-40 transition-all duration-300",
-        isScrolled ? "py-3 background/80 backdrop-blur-md shadow-xs" : "py-5"
-      )}
+      className={`navbar-fixed ${isScrolled ? 'navbar-fixed-scrolled' : 'navbar-fixed-not-scrolled'}`}
     >
-      <div className="container flex items-center justify-between">
+      <div className="container-fixed">
         <a
           className="text-xl font-bold text-primary flex items-center"
           href="#hero"
@@ -42,18 +40,19 @@ const NavBar = () => {
         </a>
 
         {/* desktop nav */}
-        <div className="hidden md:flex space-x-8 text-lg">
+        <div className="hidden md:flex items-center space-x-8 text-lg">
           {navItems.map((item, key) => {
             return (
               <a
                 key={key}
                 href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                className="nav-link-fixed"
               >
                 {item.name}
               </a>
             );
           })}
+          <ThemeToggle />
         </div>
 
         {/* mobile nav */}
@@ -67,13 +66,7 @@ const NavBar = () => {
         </button>
 
         <div
-          className={cn(
-            "fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col items-center justify-center",
-            "transition-all duration-300 md-hidden",
-            isMenuOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none "
-          )}
+          className={`fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col items-center justify-center transition-all duration-300 md-hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
         >
           <div className="flex flex-col space-y-8 text-xl ">
             {navItems.map((item, key) => {
@@ -81,13 +74,14 @@ const NavBar = () => {
                 <a
                   key={key}
                   href={item.href}
-                  className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                  className="nav-link-fixed"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </a>
               );
             })}
+            <ThemeToggle />
           </div>
         </div>
       </div>

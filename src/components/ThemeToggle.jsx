@@ -1,19 +1,47 @@
 import { Sun, Moon } from "lucide-react";
-import React, { use, useState, useEffect } from "react";
-import { cn } from "@/lib/util";
+import React, { useState, useEffect } from "react";
 
 const ThemeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "dark") {
-      setIsDarkMode(true);
-      document.documentElement.classList.add("dark");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (storedTheme) {
+      if (storedTheme === "dark") {
+        setIsDarkMode(true);
+        document.documentElement.classList.add("dark");
+      } else {
+        setIsDarkMode(false);
+        document.documentElement.classList.remove("dark");
+      }
     } else {
-      setIsDarkMode(false);
-      document.documentElement.classList.remove("dark");
+      if (prefersDark) {
+        setIsDarkMode(true);
+        document.documentElement.classList.add("dark");
+      } else {
+        setIsDarkMode(false);
+        document.documentElement.classList.remove("dark");
+      }
     }
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e) => {
+      if (!localStorage.getItem("theme")) {
+        if (e.matches) {
+          setIsDarkMode(true);
+          document.documentElement.classList.add("dark");
+        } else {
+          setIsDarkMode(false);
+          document.documentElement.classList.remove("dark");
+        }
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
   const toggleTheme = () => {
@@ -31,10 +59,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleTheme}
-      className={cn(
-        "fixed max-sm:hidden top-1.5 right-3.5 z-50 p-2 rounded-full transition-colors duration-300",
-        "focus:outline-hidden"
-      )}
+      className="p-2 rounded-full transition-colors duration-300 focus:outline-none flex items-center justify-center"
     >
       {isDarkMode ? (
         <Sun className="h-6 w-6 text-yellow-300" />
