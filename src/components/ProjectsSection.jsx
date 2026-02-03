@@ -17,7 +17,7 @@ const projects = [
     title: "RA Shift Scheduling System",
     description:
       "A comprehensive Resident Assistant scheduling platform designed to streamline shift management across campus housing. Features automated shift assignment, calendar integration, availability tracking, and real-time notifications. The system includes morning/evening shift toggles, user management, and an intuitive dashboard for viewing monthly rosters. Built with a clean, professional interface that makes scheduling effortless.",
-    image: "/projects/ra-scheduling.png",
+    image: "/projects/ra-scheduler.png",
     tags: ["React", "Calendar API", "TypeScript"],
     demoUrl: "#", // Update later
     gitHubUrl: "#", // Update later
@@ -37,7 +37,7 @@ const projects = [
     title: "Recipe Discovery & Management App",
     description:
       "A beautifully designed recipe application featuring a curated collection of international dishes. Includes recipe search by ingredients or cuisine type, favorites management system, detailed cooking instructions with timing, and serving size information. The app showcases stunning food photography with category filters (Beef, Chicken, Dessert, Lamb) and an elegant, minimalist interface optimized for mobile cooking experiences.",
-    image: "/projects/recipe-app.png",
+    image: "/projects/recipe-app-1.png",
     tags: ["React Native", "Recipe API", "Mobile UI"],
     demoUrl: "#", // Update later
     gitHubUrl: "#", // Update later
@@ -47,7 +47,7 @@ const projects = [
     title: "Saas Landing Page",
     description:
       "A modern and responsive landing page for a SaaS product, built with React and Tailwind CSS. This project showcases a sleek, user-friendly interface with fully responsive design across desktop, tablet, and mobile devices. It includes interactive components, smooth animations, and optimized performance for fast loading times.",
-    image: "/projects/saas-landing.png",
+    image: "/projects/project1.png",
     tags: ["React", "Tailwind CSS", "JavaScript"],
     demoUrl: "https://ferans-shopping-app.netlify.app/",
     gitHubUrl: "https://github.com/Ferannn-TDE/SHOPPING-APP",
@@ -57,7 +57,7 @@ const projects = [
     title: "Tic-Tac-Toe Game",
     description:
       "An interactive Tic-Tac-Toe game built with React and styled using Tailwind CSS. It features a clean, responsive design, smooth game logic, and real-time winner detection, providing a fun and engaging user experience across all devices.",
-    image: "/projects/tic-tac-toe.png",
+    image: "/projects/project2.png",
     tags: ["React", "Tailwind CSS", "JavaScript"],
     demoUrl: "https://ferans-tic-tac-toe-demo-game.netlify.app/",
     gitHubUrl: "https://github.com/Ferannn-TDE/TIC-TAC-TOE-GAME",
