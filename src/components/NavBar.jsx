@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import './navbar-fix.css';
 import ThemeToggle from "./ThemeToggle";
@@ -17,13 +18,26 @@ const NavBar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      if (!isMenuOpen) {
+        setIsScrolled(window.scrollY > 10);
+      }
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
 
   return (
     <nav
@@ -55,36 +69,47 @@ const NavBar = () => {
           <ThemeToggle />
         </div>
 
-        {/* mobile nav */}
-
+        {/* mobile hamburger button */}
         <button
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="md:hidden p-2 text-foreground z-50"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setIsMenuOpen(true)}
+          className="md:hidden p-2 text-foreground"
+          aria-label="Open menu"
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          <Menu size={24} />
         </button>
-
-        <div
-          className={`fixed inset-0 bg-background/95 backdrop-blur-md z-40 flex flex-col items-center justify-center transition-all duration-300 md-hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
-        >
-          <div className="flex flex-col space-y-8 text-xl ">
-            {navItems.map((item, key) => {
-              return (
-                <a
-                  key={key}
-                  href={item.href}
-                  className="nav-link-fixed"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-              );
-            })}
-            <ThemeToggle />
-          </div>
-        </div>
       </div>
+
+      {createPortal(
+        <div
+          className={`fixed inset-0 bg-background/95 backdrop-blur-md z-50 flex flex-col items-center justify-center transition-all duration-300 md:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        >
+          {/* close button inside overlay, top-right */}
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-4 right-4 p-2 text-foreground"
+            aria-label="Close menu"
+          >
+            <X size={24} />
+          </button>
+
+          <div className="flex flex-col items-center space-y-8 text-xl">
+            {navItems.map((item, key) => (
+              <a
+                key={key}
+                href={item.href}
+                className="nav-link-fixed"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </a>
+            ))}
+            <div className="pt-2">
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </nav>
   );
 };

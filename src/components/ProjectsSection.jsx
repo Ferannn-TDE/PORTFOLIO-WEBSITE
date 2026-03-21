@@ -4,13 +4,13 @@ import React from "react";
 const projects = [
   {
     id: 1,
-    title: "Weather Forecast App",
+    title: "FairDash",
     description:
-      "A sleek and modern weather application built with React and Tailwind CSS. Features real-time weather data with a beautiful glassmorphism design, search functionality for any city worldwide, and displays temperature, humidity, and wind speed. The app provides accurate weather information with an intuitive purple gradient interface optimized for both desktop and mobile devices.",
-    image: "/projects/weather-app.png",
-    tags: ["React", "Tailwind CSS", "Weather API"],
-    demoUrl: "#", // Update later
-    gitHubUrl: "#", // Update later
+      "A modern food delivery app for fair foods with a striking neon-themed design. Features a dynamic home page with search and categories, a full menu system with filtering, and a persistent shopping cart. Built with React 18, Context API, and React Router — following FairDash brand guidelines with Bebas Neue typography, #FF0077 neon pink accents, and a dark night market aesthetic.",
+    image: "/projects/fairdash.png",
+    tags: ["React", "Tailwind CSS", "JavaScript"],
+    demoUrl: "https://fairdash.netlify.app/",
+    gitHubUrl: "https://github.com/Ferannn-TDE/FairDash",
   },
   {
     id: 2,
