@@ -64,6 +64,16 @@ const skills = [
     level: 80,
     category: "backend",
   },
+  {
+    name: "Supabase",
+    level: 85,
+    category: "backend",
+  },
+  {
+    name: "FastAPI",
+    level: 75,
+    category: "backend",
+  },
 
   //TOOLS
   { name: "Git/GitHub", level: 90, category: "tools" },
@@ -71,10 +81,15 @@ const skills = [
   { name: "VS Code", level: 95, category: "tools" },
   { name: "Docker", level: 70, category: "tools" },
   { name: "CI/CD", level: 75, category: "tools" },
-  { name: "C++", level: 90, category: "tools" },
+  { name: "Vite", level: 85, category: "tools" },
+
+  // Systems
+  { name: "C++", level: 90, category: "systems" },
+  { name: "Socket Programming", level: 85, category: "systems" },
+  { name: "Multithreading", level: 85, category: "systems" },
 ];
 
-const categories = ["all", "frontend", "backend", "tools"];
+const categories = ["all", "frontend", "backend", "systems", "tools"];
 
 const SkillsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
