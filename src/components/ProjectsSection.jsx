@@ -158,22 +158,26 @@ const ProjectsSection = () => {
                 {/* Footer with border */}
                 <div className="flex justify-between items-center pt-4 border-t">
                   <div className="flex space-x-3">
-                    <a
-                      target="_blank"
-                      href={project.demoUrl}
-                      className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink size={20} />
-                    </a>
-                    <a
-                      target="_blank"
-                      href={project.gitHubUrl}
-                      className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                      rel="noopener noreferrer"
-                    >
-                      <Github size={20} />
-                    </a>
+                    {project.demoUrl && project.demoUrl !== "#" && (
+                      <a
+                        target="_blank"
+                        href={project.demoUrl}
+                        className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink size={20} />
+                      </a>
+                    )}
+                    {project.gitHubUrl && project.gitHubUrl !== "#" && (
+                      <a
+                        target="_blank"
+                        href={project.gitHubUrl}
+                        className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                        rel="noopener noreferrer"
+                      >
+                        <Github size={20} />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
