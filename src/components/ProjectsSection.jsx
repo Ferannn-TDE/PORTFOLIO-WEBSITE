@@ -26,9 +26,9 @@ const projects = [
     title: "Cougar Connection CRM",
     description:
       "A web-based CRM built for the SIUE School of Engineering to track K–12 outreach across schools, contacts, and events. Surfaces county-level engagement analytics with color-coded rate badges, handles CSV and Excel bulk import with client-side column mapping, and generates filtered contact lists for email and mailing-label export — all backed by a live Supabase database.",
-    image: "/projects/cougar-connection.png",
+    image: "/projects/cougar-crm.png",
     tags: ["React", "TypeScript", "Supabase"],
-    demoUrl: "#", // Update later — not deployed yet
+    demoUrl: "https://school-engagement-crm.vercel.app/",
     gitHubUrl: "https://github.com/Ferannn-TDE/School-Engagement-CRM",
   },
   {
@@ -46,7 +46,7 @@ const projects = [
     title: "HTTP Security Proxy & TCP Server",
     description:
       "A multi-threaded HTTP proxy built in C++ with Winsock that relays browser-to-server traffic in both directions and serves a local 403 to prohibited client IPs without ever contacting the origin. Spawns per-direction relay threads around blocking recv(), downgrades requests to HTTP/1.0 to force clean end-of-response signaling, and closes sockets with a polite FIN rather than a data-dropping reset. Built on a companion multi-client TCP server that hands every connection its own worker thread.",
-    image: "/projects/http-proxy.png",
+    image: "/projects/http-1.png",
     tags: ["C++", "Winsock", "TCP Sockets"],
     demoUrl: "#", // Update later — console app, no live demo
     gitHubUrl: "https://github.com/Ferannn-TDE/cs447-http-security-proxy",
@@ -56,9 +56,9 @@ const projects = [
     title: "SafeSite",
     description:
       "A mobile-first construction safety inspection app, designed and prototyped through a full HCI process, that guides workers through a four-part shift workflow. Moves from a PPE checklist to a color-coded floor plan, GPS-tagged hazard reporting with severity levels, and post-shift supervisor sign-off. Refined across two rounds of user testing and a Nielsen heuristic evaluation that surfaced eleven usability issues resolved before the final prototype.",
-    image: "/projects/safesite.png",
+    image: "/projects/safe-site.png",
     tags: ["React", "Tailwind CSS", "HCI Research"],
-    demoUrl: "#", // Update later
+    demoUrl: "https://safe-site-delta.vercel.app/",
     gitHubUrl: "https://github.com/Ferannn-TDE/Safe-Site",
   },
   {
@@ -83,13 +83,13 @@ const projects = [
   },
   {
     id: 8,
-    title: "Saas Landing Page",
+    title: "Family Feud Game",
     description:
-      "A modern and responsive landing page for a SaaS product, built with React and Tailwind CSS. This project showcases a sleek, user-friendly interface with fully responsive design across desktop, tablet, and mobile devices. It includes interactive components, smooth animations, and optimized performance for fast loading times.",
-    image: "/projects/project1.png",
+      "An interactive Family Feud game that recreates the classic TV round for two competing teams. Features a flip-to-reveal answer board, live score tracking, strike handling, and round-by-round play, all wrapped in a responsive interface that works across desktop and mobile.",
+    image: "/projects/family-feud.png",
     tags: ["React", "Tailwind CSS", "JavaScript"],
-    demoUrl: "https://ferans-shopping-app.netlify.app/",
-    gitHubUrl: "https://github.com/Ferannn-TDE/SHOPPING-APP",
+    demoUrl: "https://family-feud-roan.vercel.app/",
+    gitHubUrl: "#", // Update later — no public repo
   },
   {
     id: 9,
