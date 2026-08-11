@@ -1,4 +1,12 @@
-import { Mail, Phone, MapPin, Linkedin, Instagram, Send } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Instagram,
+  Github,
+  Send,
+} from "lucide-react";
 import React from "react";
 import { cn } from "@/lib/util";
 import { useToast } from "../hooks/use-toast";
@@ -7,18 +15,38 @@ import { useState } from "react";
 const ContactsSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString(),
+      });
+
+      if (!response.ok) throw new Error(`Submission failed: ${response.status}`);
+
       toast({
         title: "Message Sent",
         description: "Thank you for reaching out! I'll get back to you soon.",
       });
+      form.reset();
+    } catch (error) {
+      console.error("Contact form submission failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Message not sent",
+        description:
+          "Something went wrong. Please try again, or email me directly at feranmidyro@gmail.com.",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500); // Simulate a delay for form submission
-    // Handle form submission logic here
-    console.log("Form submitted");
+    }
   };
   return (
     <section id="contact" className="py-24 px-4 relative bg-secondary/30">
@@ -97,6 +125,14 @@ const ContactsSection = () => {
                 >
                   <Instagram />
                 </a>
+                <a
+                  href="https://github.com/Ferannn-TDE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition-colors"
+                >
+                  <Github />
+                </a>
               </div>
             </div>
           </div>
@@ -106,7 +142,20 @@ const ContactsSection = () => {
             <h3 className="text-2xl font-semibold mb-6 text-center">
               Send a Message
             </h3>
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form
+              className="space-y-6"
+              name="contact"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+            >
+              <input type="hidden" name="form-name" value="contact" />
+              <p className="hidden">
+                <label>
+                  Don't fill this out if you're human: <input name="bot-field" />
+                </label>
+              </p>
               {/* Name Input */}
               <div>
                 <label
@@ -150,6 +199,7 @@ const ContactsSection = () => {
                 <textarea
                   id="message"
                   name="message"
+                  rows={5}
                   className="w-full px-4 py-3 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-300 resize-none placeholder:text-muted-foreground"
                   placeholder="Hello, I would like to talk about..."
                   required
