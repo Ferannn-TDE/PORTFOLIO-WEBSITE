@@ -463,6 +463,73 @@ html.has-cursor.native-cursor * {
   }
 }
 
+/* Visible placeholder for unconfirmed facts. */
+.todo {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--color-ink);
+  background: rgb(159 227 180 / 0.45);
+  padding: 0 0.3em;
+}
+.on-night .todo {
+  color: var(--color-ink);
+  background: var(--color-ok);
+}
+
+/* Case study prose */
+.case-prose {
+  max-width: 68ch;
+  color: var(--color-ink-2);
+  font-size: 18px;
+  line-height: 1.7;
+}
+.case-prose > * + * {
+  margin-top: 1.1em;
+}
+.case-prose ul {
+  list-style: square;
+  padding-left: 1.2em;
+}
+.case-prose li + li {
+  margin-top: 0.5em;
+}
+.case-prose .case-point {
+  margin-top: 2.2em;
+}
+.case-prose .case-point p + p {
+  margin-top: 0.9em;
+}
+.case-prose .case-figure {
+  max-width: none;
+}
+
+/* Video preview that follows the cursor over project rows. */
+.preview-follower {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  width: 320px;
+  height: 200px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  background: var(--color-night);
+}
+.preview-follower.is-visible {
+  opacity: 1;
+}
+.preview-follower video,
+.preview-follower img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.preview-follower [hidden] {
+  display: none;
+}
+
 /* Reduced motion: no animation, no transitions, final states only. */
 html.reduce-motion *,
 html.reduce-motion *::before,

@@ -27,6 +27,11 @@ export default defineConfig([
     },
   },
   {
+    // Content files export `meta` next to their components on purpose.
+    files: ['src/content/**/*.jsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     files: ['**/*.test.js', 'netlify/functions/**/*.js', 'vite.config.js'],
     languageOptions: { globals: globals.node },
   },
