@@ -48,11 +48,11 @@
   to = "/index.html"
   status = 200
 
-# Everything else: the app still renders its "path not found" page, but the
-# HTTP status is 404.
+# Everything else: 404.html (the app's "path not found" page, with its own
+# title and noindex tag), served with HTTP status 404.
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/404.html"
   status = 404
 
 [functions]

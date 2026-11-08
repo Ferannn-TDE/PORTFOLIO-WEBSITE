@@ -29,9 +29,9 @@ describe("netlify.toml routes", () => {
     }
   });
 
-  it("serves /colophon with 200 and everything else with a real 404", () => {
+  it("serves /colophon with 200 and everything else with a real 404 from 404.html", () => {
     expect(rules.find((r) => r.from === "/colophon")).toMatchObject({ to: "/index.html", status: 200 });
-    expect(rules.at(-1)).toEqual({ from: "/*", to: "/index.html", status: 404 });
+    expect(rules.at(-1)).toEqual({ from: "/*", to: "/404.html", status: 404 });
     expect(rules.some((r) => r.from === "/work/*")).toBe(false); // no soft 404s for unknown slugs
   });
 
