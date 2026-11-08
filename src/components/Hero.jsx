@@ -3,6 +3,7 @@ import { site, sections } from "@/data/site";
 import { INTRO_LIFT, isReduced } from "@/lib/motion";
 import { tick } from "@/lib/ticker";
 import Clock from "./Clock";
+import { track } from "@/lib/analytics";
 import Pathfinder from "./Pathfinder";
 
 const NAME = ["Feran", "Odedairo"];
@@ -80,6 +81,7 @@ export default function Hero() {
             </a>
             <a
               href={site.resume}
+              onClick={() => track("resume-open", { source: "hero" })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-[50px] items-center border border-cream/35 px-[18px] hover:border-violet-soft hover:text-violet-soft"

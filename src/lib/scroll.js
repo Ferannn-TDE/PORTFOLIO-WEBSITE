@@ -62,12 +62,18 @@ export function initScroll() {
   document.addEventListener("click", onAnchorClick);
 }
 
-// Pause / resume page scrolling (menu, command palette).
+// Pause / resume page scrolling (menu, command palette). Counted, so nested
+// overlays (palette opened from the menu) release only when both are closed.
+let locks = 0;
 export function lockScroll() {
+  locks += 1;
+  if (locks > 1) return;
   lenis?.stop();
   document.documentElement.style.overflow = "hidden";
 }
 export function unlockScroll() {
+  locks = Math.max(0, locks - 1);
+  if (locks) return;
   document.documentElement.style.overflow = "";
   lenis?.start();
 }

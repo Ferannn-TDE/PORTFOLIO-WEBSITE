@@ -3,6 +3,7 @@ import { algorithms } from "./algorithms";
 import { presets } from "./presets";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { onIntroDone } from "@/lib/motion";
+import { track } from "@/lib/analytics";
 import "./pathfinder.css";
 
 const ALGOS = [
@@ -64,6 +65,7 @@ export default function Pathfinder({ autoRun = true, commandEvent = "pathfinder:
       if (target === preset.start || useWalls.has(target)) return;
       const grid = { cols: preset.cols, rows: preset.rows, walls: useWalls, heavy };
       const { result, ms } = timeSearch(algorithms[useAlgo], grid, preset.start, target);
+      if (!opts.auto) track("pathfinder-run", { algo: useAlgo });
       const depth = new Map(result.visited.map((v) => [v.cell, v.depth]));
       const pathIdx = new Map(result.path.map((c, i) => [c, i]));
       const maxDepth = result.visited.reduce((m, v) => Math.max(m, v.depth), 0);
@@ -112,7 +114,7 @@ export default function Pathfinder({ autoRun = true, commandEvent = "pathfinder:
   routeRef.current = route;
   useEffect(() => {
     if (!autoRun) return;
-    return onIntroDone(() => routeRef.current(preset.defaultTarget));
+    return onIntroDone(() => routeRef.current(preset.defaultTarget, { auto: true }));
   }, [autoRun, preset]);
 
   // External commands (command palette): { type: "algo", value } or { type: "route" }.

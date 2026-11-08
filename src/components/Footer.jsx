@@ -1,31 +1,17 @@
-import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
+import { copyEmail } from "@/lib/email";
+import { track } from "@/lib/analytics";
 import Clock from "./Clock";
 
 function CopyEmail() {
-  const [state, setState] = useState("idle");
-  const timer = useRef(0);
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(site.email);
-      setState("copied");
-    } catch {
-      setState("failed");
-    }
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setState("idle"), 2000);
-  };
-
   return (
     <button
       type="button"
-      onClick={copy}
+      onClick={() => copyEmail("footer")}
       data-cursor="copy"
       className="min-h-11 font-mono text-[12px] uppercase tracking-[0.14em] text-cream/70 hover:text-violet-soft"
     >
-      <span aria-live="polite">{state === "copied" ? "Copied ✓" : state === "failed" ? "Copy failed" : "Copy email"}</span>
+      Copy email
     </button>
   );
 }
@@ -71,7 +57,13 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a className="hover:text-violet-soft" href={site.resume} target="_blank" rel="noopener noreferrer">
+              <a
+                className="hover:text-violet-soft"
+                href={site.resume}
+                onClick={() => track("resume-open", { source: "footer" })}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Résumé (PDF)
               </a>
             </li>

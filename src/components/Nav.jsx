@@ -5,6 +5,8 @@ import { tick } from "@/lib/ticker";
 import { getScroll, onScroll, lockScroll, unlockScroll, scrollToElement } from "@/lib/scroll";
 import { isReduced } from "@/lib/motion";
 import { replayIntro } from "@/lib/intro";
+import { openPalette, paletteShortcut } from "@/lib/palette";
+import { track } from "@/lib/analytics";
 import { MailIcon, MenuIcon, CloseIcon } from "./Icons";
 
 const tracked = [
@@ -136,7 +138,26 @@ function Menu({ open, onClose }) {
         </ul>
         <ul className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-[13px] uppercase tracking-[0.14em]">
           <li>
-            <a className="link-underline" href={site.resume} target="_blank" rel="noopener noreferrer">
+            <button
+              type="button"
+              className="link-underline uppercase"
+              onClick={() => {
+                onClose();
+                // Let the menu hand focus back first, so the palette returns it there.
+                requestAnimationFrame(() => requestAnimationFrame(openPalette));
+              }}
+            >
+              ⌘K Search
+            </button>
+          </li>
+          <li>
+            <a
+              className="link-underline"
+              href={site.resume}
+              onClick={() => track("resume-open", { source: "menu" })}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Résumé ↗
             </a>
           </li>
@@ -208,6 +229,16 @@ export default function Nav() {
             )}
           </div>
 
+          <div className="flex items-center">
+          <button
+            type="button"
+            onClick={openPalette}
+            aria-label="Open command palette"
+            aria-keyshortcuts="Meta+K Control+K"
+            className="hidden h-11 items-center px-2 font-mono text-[11px] tracking-[0.08em] text-cream/70 hover:text-violet-soft md:flex"
+          >
+            {paletteShortcut()}
+          </button>
           <button
             ref={menuBtnRef}
             type="button"
@@ -219,6 +250,7 @@ export default function Nav() {
           >
             <MenuIcon />
           </button>
+          </div>
 
           <span
             ref={barRef}
