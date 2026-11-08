@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { site } from "@/data/site";
+import { tick } from "@/lib/ticker";
+import { getScroll, onScroll, lockScroll, unlockScroll, scrollToElement } from "@/lib/scroll";
+import { isReduced } from "@/lib/motion";
+import { replayIntro } from "@/lib/intro";
 import { MailIcon, MenuIcon, CloseIcon } from "./Icons";
 
 const tracked = [
@@ -18,25 +22,21 @@ const menuLinks = [
   { href: "/#contact", label: "Contact", num: "04" },
 ];
 
+// Progress line: scroll events only mark it dirty; the shared frame loop
+// writes the transform. Page height comes from a cached measurement.
 function useScrollProgress(barRef) {
   useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      if (barRef.current) barRef.current.style.transform = `scaleX(${p})`;
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    let dirty = true;
+    const unScroll = onScroll(() => (dirty = true));
+    const unTick = tick(() => {
+      if (!dirty) return;
+      dirty = false;
+      const { y, max } = getScroll();
+      if (barRef.current) barRef.current.style.transform = `scaleX(${Math.min(1, y / max)})`;
+    });
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      unScroll();
+      unTick();
     };
   }, [barRef]);
 }
@@ -68,8 +68,7 @@ function Menu({ open, onClose }) {
   useEffect(() => {
     if (!open) return;
     const panel = panelRef.current;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    lockScroll();
     panel?.querySelector("a,button")?.focus();
 
     const onKey = (e) => {
@@ -92,7 +91,7 @@ function Menu({ open, onClose }) {
     };
     document.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = prevOverflow;
+      unlockScroll();
       document.removeEventListener("keydown", onKey);
     };
   }, [open, onClose]);
@@ -106,6 +105,7 @@ function Menu({ open, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
+      data-lenis-prevent
       className="on-night dot-grid fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-night text-cream"
     >
       <div className="mx-auto mt-4 flex h-[60px] w-[calc(100%-32px)] max-w-[500px] items-center justify-between bg-button px-3">
@@ -187,7 +187,16 @@ export default function Nav() {
           <div className="flex items-baseline gap-3">
             <a
               href="/#top"
-              aria-label="Feran Odedairo, back to top"
+              onClick={(e) => {
+                // On the home page, the monogram replays the boot intro.
+                if (location.pathname !== "/" || isReduced()) return;
+                const top = document.getElementById("top");
+                if (!top) return;
+                e.preventDefault();
+                scrollToElement(top, { immediate: true });
+                replayIntro();
+              }}
+              aria-label="Feran Odedairo, back to top and replay intro"
               className="font-display text-[30px] italic leading-none hover:text-violet-soft"
             >
               fo.

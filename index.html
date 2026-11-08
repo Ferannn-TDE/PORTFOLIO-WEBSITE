@@ -10,8 +10,53 @@
     />
     <meta name="theme-color" content="#1C1838" />
     <link rel="icon" type="image/jpeg" href="/f_logo.jpg" />
+    <script>
+      // Runs before first paint: reduced motion, and whether the boot intro plays.
+      (function () {
+        var d = document.documentElement;
+        window.__foT0 = performance.now();
+        function get(k) {
+          try { return sessionStorage.getItem(k); } catch (e) { return null; }
+        }
+        var rm = matchMedia("(prefers-reduced-motion: reduce)").matches || get("fo:reduce-motion") === "1";
+        if (rm) d.classList.add("reduce-motion");
+        var nav = performance.getEntriesByType ? performance.getEntriesByType("navigation")[0] : null;
+        var backForward = nav && nav.type === "back_forward";
+        if (!rm && !location.hash && !backForward && location.pathname === "/" && get("fo:intro") !== "1") {
+          d.classList.add("intro");
+        }
+      })();
+    </script>
+    <style>
+      /* Boot overlay. Pure CSS so it lifts on schedule even if JS never loads. */
+      #boot { display: none; }
+      html.intro #boot {
+        position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+        background: #1c1838; color: rgb(244 239 230 / 0.75);
+        font: 15px/2 "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+        animation: boot-lift 0.9s cubic-bezier(0.76, 0, 0.24, 1) 1.7s forwards;
+      }
+      html.intro #boot .ln { opacity: 0; animation: boot-ln 0s 0s forwards; }
+      html.intro #boot .ln:nth-child(2) { animation-delay: 0.26s; }
+      html.intro #boot .ln:nth-child(3) { animation-delay: 0.52s; }
+      html.intro #boot .ln:nth-child(4) { animation-delay: 0.78s; }
+      html.intro #boot .ln:nth-child(5) { animation-delay: 1.04s; }
+      #boot .v { color: #a99cf5; }
+      #boot .ok { color: #9fe3b4; }
+      @keyframes boot-ln { to { opacity: 1; } }
+      @keyframes boot-lift { to { transform: translateY(-100%); } }
+    </style>
   </head>
   <body>
+    <div id="boot" aria-hidden="true">
+      <div>
+        <div class="ln"><span class="v">$</span> npm run feran</div>
+        <div class="ln">› compiling readme … <span class="ok">ok</span></div>
+        <div class="ln">› linking 6 projects … <span class="ok">ok</span></div>
+        <div class="ln">› routing campus graph … <span class="ok">ok</span></div>
+        <div class="ln">ready in <span id="boot-ms">…</span> ms</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

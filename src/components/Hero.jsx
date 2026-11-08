@@ -1,8 +1,56 @@
+import { useEffect, useRef } from "react";
 import { site, sections } from "@/data/site";
+import { INTRO_LIFT, isReduced } from "@/lib/motion";
+import { tick } from "@/lib/ticker";
 import Clock from "./Clock";
 import Pathfinder from "./Pathfinder";
 
+const NAME = ["Feran", "Odedairo"];
+const GLYPHS = "01<>/{}#$%&*+=";
+const SCRAMBLE_MS = 1000;
+const SWAP_MS = 45; // how often unresolved glyphs change
+
+// Resolves each line left to right from random glyphs. Writes text directly
+// to the spans so React does not re-render every frame.
+function useScramble(refs) {
+  useEffect(() => {
+    let stop = null;
+    const run = () => {
+      stop?.();
+      if (isReduced()) return;
+      const start = performance.now();
+      let lastSwap = -Infinity;
+      stop = tick((now) => {
+        const p = Math.min(1, (now - start) / SCRAMBLE_MS);
+        if (p < 1 && now - lastSwap < SWAP_MS) return;
+        lastSwap = now;
+        NAME.forEach((word, i) => {
+          const shown = Math.floor(p * word.length);
+          let out = word.slice(0, shown);
+          for (let j = shown; j < word.length; j++) out += GLYPHS[(Math.random() * GLYPHS.length) | 0];
+          if (refs[i].current) refs[i].current.textContent = out;
+        });
+        if (p >= 1) {
+          stop();
+          stop = null;
+        }
+      });
+    };
+    window.addEventListener(INTRO_LIFT, run);
+    return () => {
+      window.removeEventListener(INTRO_LIFT, run);
+      stop?.();
+      refs.forEach((r, i) => r.current && (r.current.textContent = NAME[i]));
+    };
+  }, [refs]);
+}
+
 export default function Hero() {
+  const line1 = useRef(null);
+  const line2 = useRef(null);
+  const lines = useRef([line1, line2]).current;
+  useScramble(lines);
+
   return (
     <section
       id="top"
@@ -14,13 +62,13 @@ export default function Hero() {
           <p className="label !text-[12px]">( Now shipping )</p>
           <h1
             aria-label="Feran Odedairo"
-            className="font-display text-[clamp(64px,13vw,88px)] font-normal leading-[0.98] tracking-[-0.02em]"
+            className="overflow-x-clip font-display text-[clamp(64px,13vw,88px)] font-normal leading-[0.98] tracking-[-0.02em]"
           >
-            <span aria-hidden="true" className="block">
-              Feran
+            <span ref={line1} aria-hidden="true" className="block whitespace-nowrap">
+              {NAME[0]}
             </span>
-            <span aria-hidden="true" className="block">
-              Odedairo
+            <span ref={line2} aria-hidden="true" className="block whitespace-nowrap">
+              {NAME[1]}
             </span>
           </h1>
           <p className="max-w-[30ch] text-[21px] font-light leading-[1.5]">
