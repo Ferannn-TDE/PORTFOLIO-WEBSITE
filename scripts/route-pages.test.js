@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { build } from "vite";
-import { mkdtempSync, readFileSync, existsSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, existsSync, rmSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -64,6 +64,17 @@ describe("per-route HTML (real build)", () => {
       // Each file appears exactly once per tag (no duplicates left behind).
       expect(html.match(/rel="canonical"/g)).toHaveLength(1);
     }
+  });
+
+  it("route files are flat (work/<slug>.html), never folder/index.html", () => {
+    for (const path of Object.keys(routeMeta).filter((p) => p !== "/" && p !== "/404")) {
+      expect(routeFile(path)).toBe(`${path.slice(1)}.html`);
+      expect(existsSync(join(out, path.slice(1), "index.html")), `no ${path.slice(1)}/index.html`).toBe(false);
+    }
+    // The only index.html is the root one.
+    const walk = (dir) =>
+      readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? walk(join(dir, d.name)) : [join(dir, d.name)]));
+    expect(walk(out).filter((f) => f.endsWith("index.html"))).toEqual([join(out, "index.html")]);
   });
 
   it("404.html is noindex, has no canonical, and carries the 404 title", () => {

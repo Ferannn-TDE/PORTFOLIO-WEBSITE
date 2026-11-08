@@ -92,8 +92,8 @@ function seo(siteUrl) {
   };
 }
 
-// After index.html is final, write a copy per route (work/fairsynq/index.html,
-// colophon/index.html, 404.html) carrying that route's title, description,
+// After index.html is final, write a copy per route (work/fairsynq.html,
+// colophon.html, 404.html) carrying that route's title, description,
 // canonical, og: and twitter: tags. Netlify serves these real files before
 // the rewrite rules, so link previews and crawlers see the right page; the
 // app then boots exactly as it does from index.html.

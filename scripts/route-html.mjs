@@ -4,11 +4,14 @@
 
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// Where each route's file goes in dist/.
+// Where each route's file goes in dist/. Flat files (work/fairsynq.html), not
+// folders: with work/fairsynq/index.html, Netlify answered /work/fairsynq with
+// a 301 to /work/fairsynq/. A flat file is meant to be served at the no-slash
+// URL directly (confirm on a deploy).
 export function routeFile(path) {
   if (path === "/") return "index.html";
   if (path === "/404") return "404.html";
-  return `${path.replace(/^\/+|\/+$/g, "")}/index.html`;
+  return `${path.replace(/^\/+|\/+$/g, "")}.html`;
 }
 
 function replaceOne(html, re, replacement, what) {
