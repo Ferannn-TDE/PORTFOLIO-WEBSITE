@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { projects, smallerBuilds, projectLink } from "@/data/projects";
 import { site } from "@/data/site";
+import PreviewFollower from "./PreviewFollower";
 
 const rowClass =
   "row group relative -mx-4 grid grid-cols-[40px_minmax(0,1fr)] gap-x-4 gap-y-4 border-t border-hairline px-4 py-9 md:grid-cols-[48px_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-x-8";
@@ -36,21 +37,21 @@ function Row({ p, n }) {
   const url = projectLink(p);
   if (!url) {
     return (
-      <div data-reveal className={rowClass}>
+      <div data-reveal data-preview={p.slug} className={rowClass}>
         <RowBody p={p} n={n} linked={false} />
       </div>
     );
   }
   if (p.href) {
     return (
-      <Link data-reveal data-cursor="open →" to={p.href} className={rowClass}>
+      <Link data-reveal data-preview={p.slug} data-cursor="open →" to={p.href} className={rowClass}>
         <RowBody p={p} n={n} linked />
         <span className="sr-only">Read the case study</span>
       </Link>
     );
   }
   return (
-    <a data-reveal data-cursor="open ↗" href={url} target="_blank" rel="noopener noreferrer" className={rowClass}>
+    <a data-reveal data-preview={p.slug} data-cursor="open ↗" href={url} target="_blank" rel="noopener noreferrer" className={rowClass}>
       <RowBody p={p} n={n} linked />
       <span className="sr-only">(GitHub repository, opens in a new tab)</span>
     </a>
@@ -90,6 +91,7 @@ export default function Work() {
           more on GitHub ↗
         </a>
       </p>
+      <PreviewFollower container="#work" />
     </section>
   );
 }
