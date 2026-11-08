@@ -8,9 +8,11 @@ import Marquee from "@/components/Marquee";
 import Footer from "@/components/Footer";
 import GitHubStrip from "@/components/GitHubStrip";
 import { useReveal } from "@/hooks/useReveal";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 export default function Home() {
   useReveal();
+  usePageMeta();
   return (
     <>
       <a
