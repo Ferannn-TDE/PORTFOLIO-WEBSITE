@@ -18,7 +18,7 @@ export const projects = [
     title: "Cougar Connection",
     tag: "Capstone team · Real client",
     description:
-      "A CRM for the SIUE School of Engineering’s K–12 outreach: county‑level engagement analytics, CSV/Excel bulk import with column mapping, and filtered exports for email and mailing labels.",
+      "A CRM for the SIUE School of Engineering’s outreach to high schools: county‑level engagement analytics, CSV/Excel bulk import with column mapping, and filtered exports for email and mailing labels.",
     stack: ["React · TypeScript", "Supabase"],
     href: "/work/cougar-connection",
     repo: "https://github.com/Ferannn-TDE/School-Engagement-CRM",
