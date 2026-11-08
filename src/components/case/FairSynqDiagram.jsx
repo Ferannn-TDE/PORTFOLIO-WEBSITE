@@ -1,4 +1,6 @@
 import { useId } from "react";
+import { Arrow, Box, Edge, Responsive } from "./svg";
+import { svgId } from "@/lib/svgId";
 
 // FairSynq architecture. Two layouts of the same diagram: wide (640px and up)
 // and stacked (phones). Only one is displayed at a time.
@@ -9,45 +11,6 @@ const DESC =
   "Stripe Connect for payments with separate charges and transfers, and Firebase to push live order status. " +
   "The app puts scheduling and payout jobs on a Redis queue, which a BullMQ worker processes; " +
   "the worker updates Postgres and creates Stripe transfers. Firebase sends live status back to people.";
-
-function Box({ x, y, w, h, title, sub, dark = false }) {
-  return (
-    <g>
-      <rect x={x} y={y} width={w} height={h} className={dark ? "fill-night" : "fill-paper stroke-ink"} strokeWidth="1" />
-      <text x={x + 16} y={y + 28} className={`font-display text-[20px] ${dark ? "fill-cream" : "fill-ink"}`}>
-        {title}
-      </text>
-      {[].concat(sub).map((line, i) => (
-        <text key={i} x={x + 16} y={y + 48 + i * 16} className={`font-mono text-[11px] ${dark ? "fill-cream" : "fill-muted"}`}>
-          {line}
-        </text>
-      ))}
-    </g>
-  );
-}
-
-function Edge({ d, label, lx, ly, marker }) {
-  return (
-    <g>
-      <path d={d} fill="none" className="stroke-ink" strokeWidth="1" markerEnd={`url(#${marker})`} />
-      {label && (
-        <text x={lx} y={ly} className="fill-muted font-mono text-[10px]">
-          {label}
-        </text>
-      )}
-    </g>
-  );
-}
-
-function Arrow({ id }) {
-  return (
-    <defs>
-      <marker id={id} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M0,0 L10,5 L0,10 z" className="fill-ink" />
-      </marker>
-    </defs>
-  );
-}
 
 function Wide({ ids }) {
   const m = `${ids}-m`;
@@ -116,15 +79,6 @@ function Stacked({ ids }) {
 }
 
 export default function FairSynqDiagram() {
-  const ids = useId().replace(/[^a-zA-Z0-9_-]/g, "");
-  return (
-    <div className="border border-hairline bg-paper p-4 sm:p-6">
-      <div className="hidden sm:block">
-        <Wide ids={`w${ids}`} />
-      </div>
-      <div className="sm:hidden">
-        <Stacked ids={`s${ids}`} />
-      </div>
-    </div>
-  );
+  const ids = svgId(useId());
+  return <Responsive wide={<Wide ids={`w${ids}`} />} stacked={<Stacked ids={`s${ids}`} />} />;
 }
