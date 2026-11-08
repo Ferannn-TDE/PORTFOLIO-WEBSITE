@@ -28,9 +28,27 @@ function preloadFonts() {
   };
 }
 
+// Serves the GitHub activity Netlify Function locally (vite dev / preview) by
+// calling the same handler, so the strip can be checked without netlify dev.
+// Note: this does not emulate Netlify's CDN cache.
+function localFunctions() {
+  // Block body on purpose: a function returned from configureServer would be
+  // treated as a post-middleware hook.
+  const mount = (server) => {
+    server.middlewares.use("/.netlify/functions/github-activity", async (_req, res) => {
+      const { handle } = await import("./netlify/lib/github-activity.mjs");
+      const response = await handle();
+      res.statusCode = response.status;
+      response.headers.forEach((value, key) => res.setHeader(key, value));
+      res.end(await response.text());
+    });
+  };
+  return { name: "local-functions", configureServer: mount, configurePreviewServer: mount };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), preloadFonts()],
+  plugins: [react(), tailwindcss(), preloadFonts(), localFunctions()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
