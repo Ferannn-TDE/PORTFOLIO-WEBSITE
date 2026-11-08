@@ -1,42 +1,6 @@
 import { site, sections } from "@/data/site";
 import Clock from "./Clock";
-
-// Static stand-in for the pathfinder panel. Replaced by components/Pathfinder in phase 3.
-const COLS = 12;
-const ROWS = 7;
-const START = 3 * COLS + 1;
-const WALLS = new Set([
-  ...[1, 2, 3, 4, 5].map((r) => r * COLS + 4),
-  ...[0, 1, 2, 3].map((r) => r * COLS + 8),
-  6 * COLS + 8,
-]);
-
-function PathfinderPlaceholder() {
-  return (
-    <div className="min-w-0 border border-hairline-night bg-black/30 font-mono">
-      <div className="flex items-center justify-between gap-3 border-b border-hairline-night px-5 py-3.5 text-[12px] tracking-[0.06em] text-cream/70">
-        <span>
-          <span className="text-violet-soft">$</span> route --algo bfs
-        </span>
-        <span>click any square</span>
-      </div>
-      <div aria-hidden="true" className="grid grid-cols-8 gap-2 p-6 sm:grid-cols-12">
-        {Array.from({ length: COLS * ROWS }, (_, i) => {
-          const col = i % COLS;
-          const cls = WALLS.has(i)
-            ? "shadow-[inset_0_0_0_1px_rgb(244_239_230/0.12)]"
-            : i === START
-              ? "bg-cream"
-              : "bg-cream/[0.14]";
-          return <span key={i} className={`aspect-square ${cls} ${col >= 8 ? "max-sm:hidden" : ""}`} />;
-        })}
-      </div>
-      <div className="flex items-center justify-between gap-3 border-t border-hairline-night px-5 pb-4 pt-3 text-[12px] text-cream/75">
-        <span>visited — · path — · — ms</span>
-      </div>
-    </div>
-  );
-}
+import Pathfinder from "./Pathfinder";
 
 export default function Hero() {
   return (
@@ -76,7 +40,7 @@ export default function Hero() {
             </a>
           </div>
         </div>
-        <PathfinderPlaceholder />
+        <Pathfinder />
       </div>
 
       <div className="shell flex flex-wrap items-end justify-between gap-5 font-mono text-[12px] uppercase tracking-[0.14em]">
