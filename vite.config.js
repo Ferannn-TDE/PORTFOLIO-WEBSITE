@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -31,13 +31,13 @@ function preloadFonts() {
 // Serves the GitHub activity Netlify Function locally (vite dev / preview) by
 // calling the same handler, so the strip can be checked without netlify dev.
 // Note: this does not emulate Netlify's CDN cache.
-function localFunctions() {
+function localFunctions(env) {
   // Block body on purpose: a function returned from configureServer would be
   // treated as a post-middleware hook.
   const mount = (server) => {
     server.middlewares.use("/.netlify/functions/github-activity", async (_req, res) => {
       const { handle } = await import("./netlify/lib/github-activity.mjs");
-      const response = await handle();
+      const response = await handle({ token: env.GITHUB_TOKEN || undefined });
       res.statusCode = response.status;
       response.headers.forEach((value, key) => res.setHeader(key, value));
       res.end(await response.text());
@@ -47,11 +47,13 @@ function localFunctions() {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), tailwindcss(), preloadFonts(), localFunctions()],
+export default defineConfig(({ mode }) => ({
+  // GITHUB_TOKEN is loaded for the local function middleware only (Node side).
+  // Only VITE_-prefixed variables ever reach the browser bundle.
+  plugins: [react(), tailwindcss(), preloadFonts(), localFunctions(loadEnv(mode, process.cwd(), ""))],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-});
+}));

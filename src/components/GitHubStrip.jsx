@@ -3,7 +3,7 @@ import { timeAgo } from "@/lib/time";
 
 const ENDPOINT = "/.netlify/functions/github-activity";
 
-function Sparkline({ weeks }) {
+function Sparkline({ weeks, kind }) {
   const max = Math.max(1, ...weeks);
   const w = 6;
   const gap = 3;
@@ -14,7 +14,7 @@ function Sparkline({ weeks }) {
       height={h}
       viewBox={`0 0 ${weeks.length * (w + gap) - gap} ${h}`}
       role="img"
-      aria-label={`Pushes per week, oldest first: ${weeks.join(", ")}`}
+      aria-label={`${kind === "commits" ? "Commits" : "Pushes"} per week over the last ${weeks.length} weeks, oldest first: ${weeks.join(", ")}`}
       className="shrink-0"
     >
       {weeks.map((n, i) => {
@@ -37,7 +37,7 @@ export default function GitHubStrip() {
       fetch(ENDPOINT, { signal: ctrl.signal })
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => {
-          if (d?.available && d.repo && d.pushedAt && Array.isArray(d.weeks)) setData(d);
+          if (d?.available && d.repo && d.pushedAt && Array.isArray(d.activity?.weeks)) setData(d);
         })
         .catch(() => {});
     const ric = window.requestIdleCallback;
@@ -79,8 +79,10 @@ export default function GitHubStrip() {
           )}
         </p>
         <span className="flex items-center gap-3 text-muted">
-          <Sparkline weeks={data.weeks} />
-          <span className="text-[12px] uppercase tracking-[0.14em]">pushes · {data.weeks.length} wk</span>
+          <Sparkline weeks={data.activity.weeks} kind={data.activity.kind} />
+          <span className="text-[12px] uppercase tracking-[0.14em]">
+            {data.activity.kind === "commits" ? "commits" : "pushes"} · {data.activity.weeks.length} wk
+          </span>
         </span>
       </div>
     </aside>
