@@ -1,29 +1,31 @@
-import React from "react";
+import Nav from "@/components/Nav";
+import Hero from "@/components/Hero";
+import Readme from "@/components/Readme";
+import Work from "@/components/Work";
+import Log from "@/components/Log";
+import Stack from "@/components/Stack";
+import Marquee from "@/components/Marquee";
+import Footer from "@/components/Footer";
 
-import StarBackground from "@/components/StarBackground";
-import NavBar from "@/components/NavBar";
-import HeroSection from "@/components/HeroSection";
-import AboutMeSection from "@/components/AboutMeSection";
-import SkillsSection from "@/components/SkillsSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import ContactsSection from "@/components/ContactsSection";
-import Footer from "../components/Footer";
-
-const Home = () => {
+export default function Home() {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <StarBackground />
-      <NavBar />
-      <main>
-        <HeroSection />
-        <AboutMeSection />
-        <SkillsSection />
-        <ProjectsSection />
-        <ContactsSection />
+    <>
+      <a
+        href="#main"
+        className="sr-only z-[70] bg-button px-4 py-3 text-cream focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to content
+      </a>
+      <Nav />
+      <Hero />
+      <main id="main" tabIndex={-1} className="outline-none">
+        <Readme />
+        <Work />
+        <Log />
+        <Stack />
       </main>
+      <Marquee />
       <Footer />
-    </div>
+    </>
   );
-};
-
-export default Home;
+}
