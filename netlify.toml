@@ -2,11 +2,28 @@
   command = "npm run build"
   publish = "dist"
 
-# Client-side routes (/work/fairsynq, /colophon, unknown paths) all load the SPA.
+# Client-side routes. Netlify serves real files (assets, previews, the résumé)
+# before these rules, and /.netlify/functions/* is never rewritten.
+#
+# Known routes load the app with 200. Each case study is listed by name so an
+# unknown /work/<slug> is a real 404, not a soft one. A unit test keeps this
+# list in step with src/content/caseStudies/slugs.js.
+[[redirects]]
+  from = "/work/fairsynq"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/colophon"
+  to = "/index.html"
+  status = 200
+
+# Everything else: the app still renders its "path not found" page, but the
+# HTTP status is 404.
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200
+  status = 404
 
 [functions]
   directory = "netlify/functions"
