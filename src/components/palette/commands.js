@@ -35,7 +35,8 @@ export function buildCommands(ctx) {
     { id: "copy-email", group: "Contact", label: "Copy email", hint: site.email, run: ctx.copyEmail },
     { id: "resume", group: "Links", label: "Open résumé", hint: "PDF ↗", run: () => ctx.openExternal(site.resume, "resume") },
     { id: "github", group: "Links", label: "Open GitHub", hint: "↗", run: () => ctx.openExternal(site.github) },
-    { id: "linkedin", group: "Links", label: "Open LinkedIn", hint: "↗", run: () => ctx.openExternal(site.linkedin) }
+    { id: "linkedin", group: "Links", label: "Open LinkedIn", hint: "↗", run: () => ctx.openExternal(site.linkedin) },
+    { id: "colophon", group: "Links", label: "Colophon", hint: "how this site is made", run: () => ctx.navigate("/colophon") }
   );
 
   if (onHome) {

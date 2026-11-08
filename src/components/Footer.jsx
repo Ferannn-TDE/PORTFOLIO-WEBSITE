@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { site } from "@/data/site";
 import { copyEmail } from "@/lib/email";
 import { track } from "@/lib/analytics";
@@ -66,6 +67,11 @@ export default function Footer() {
               >
                 Résumé (PDF)
               </a>
+            </li>
+            <li>
+              <Link className="hover:text-violet-soft" to="/colophon">
+                Colophon
+              </Link>
             </li>
           </ul>
           <div className="flex flex-wrap items-center gap-x-9 gap-y-3 font-mono text-[12px] uppercase tracking-[0.14em] text-cream/70">

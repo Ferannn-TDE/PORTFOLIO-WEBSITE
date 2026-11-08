@@ -2,6 +2,14 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
+import { readFileSync } from "fs";
+
+// Installed versions, shown on the colophon page. Read at build time so the
+// page never states a version that isn't actually shipped.
+const STACK = ["react", "react-router-dom", "vite", "tailwindcss", "lenis", "vitest"];
+const versions = Object.fromEntries(
+  STACK.map((name) => [name, JSON.parse(readFileSync(path.resolve(__dirname, "node_modules", name, "package.json"), "utf8")).version])
+);
 
 // Preload the two fonts the hero needs for first paint, so the text does not
 // reflow (and shift the layout) when they swap in. Names are hashed at build
@@ -51,6 +59,9 @@ export default defineConfig(({ mode }) => ({
   // GITHUB_TOKEN is loaded for the local function middleware only (Node side).
   // Only VITE_-prefixed variables ever reach the browser bundle.
   plugins: [react(), tailwindcss(), preloadFonts(), localFunctions(loadEnv(mode, process.cwd(), ""))],
+  define: {
+    __STACK_VERSIONS__: JSON.stringify(versions),
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

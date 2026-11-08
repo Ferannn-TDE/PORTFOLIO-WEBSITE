@@ -190,7 +190,7 @@ export default function Palette() {
               setQuery(e.target.value);
               setActive(0);
             }}
-            className="h-14 w-full bg-transparent font-mono text-[15px] text-cream outline-none placeholder:text-cream/50"
+            className="h-14 w-full bg-transparent font-mono text-[15px] text-cream outline-none placeholder:text-cream/60"
             autoComplete="off"
             spellCheck="false"
           />
