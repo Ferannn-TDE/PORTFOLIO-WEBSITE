@@ -6,6 +6,7 @@ import Log from "@/components/Log";
 import Stack from "@/components/Stack";
 import Marquee from "@/components/Marquee";
 import Footer from "@/components/Footer";
+import GitHubStrip from "@/components/GitHubStrip";
 import { useReveal } from "@/hooks/useReveal";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
         <Work />
         <Log />
         <Stack />
+        <GitHubStrip />
       </main>
       <Marquee />
       <Footer />
