@@ -6,6 +6,9 @@ import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/jetbrains-mono/wght.css";
 import "./index.css";
 import App from "./App.jsx";
+import { initScroll } from "./lib/scroll";
+
+initScroll();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
