@@ -1,7 +1,6 @@
 /* global __STACK_VERSIONS__ */
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import Todo from "@/components/Todo";
 import { CaseSection } from "@/components/case/parts";
 import { HEAVY_COST } from "@/components/Pathfinder/algorithms";
 import { site } from "@/data/site";
@@ -33,6 +32,16 @@ const contrast = [
   ["Cream on night", "14.8:1"],
   ["Cream at 60% on night (dimmest text there)", "6.1:1"],
   ["Violet focus and hover text on paper", "6.9:1"],
+];
+
+// Lighthouse 12.6.1, draft deploy, median of three runs (8 November 2026).
+const lighthouse = [
+  ["/", "Mobile", "99", "100", "100", "100"],
+  ["/", "Desktop", "100", "100", "100", "100"],
+  ["/work/fairsynq", "Mobile", "95", "100", "100", "100"],
+  ["/work/fairsynq", "Desktop", "99", "100", "100", "100"],
+  ["/colophon", "Mobile", "95", "100", "100", "100"],
+  ["/colophon", "Desktop", "100", "100", "100", "100"],
 ];
 
 function Table({ rows, cols }) {
@@ -169,7 +178,15 @@ export default function Colophon() {
 
         <CaseSection num="06" label="Measured" title="Lighthouse">
           <p>
-            Mobile scores from the live site: <Todo>fill after deploy</Todo>
+            Measured on 8 November 2026 with Lighthouse 12.6.1 against a deployed draft of this site. Each number is the
+            median of three runs, using Lighthouse&apos;s simulated mobile and desktop settings.
+          </p>
+          <div className="!mt-4 overflow-x-auto">
+            <Table cols={["Page", "Device", "Performance", "Accessibility", "Best practices", "SEO*"]} rows={lighthouse} />
+          </div>
+          <p className="text-[15px] text-muted">
+            * Netlify marks draft deploys “noindex”, which fails Lighthouse&apos;s crawlability check, so that one check
+            is left out of the SEO score here. With it included, the draft scored 66 on every page.
           </p>
           <p>
             {analyticsEnabled
