@@ -77,46 +77,37 @@ export function Body() {
           </p>
           <p>The cost is one more moving part to run and watch: Redis and the worker process.</p>
         </CasePoint>
-        <CasePoint title="One derivation, used everywhere">
+        <CasePoint title="One rule, one place">
           <p>
-            Some values, like an order&apos;s status, were worked out in more than one place. Two copies of one
-            derivation drift apart, and eventually one of them lies. I moved that logic into shared functions that every
-            part of the app calls. <Todo>confirm which values were consolidated</Todo>
+            Two copies of one derivation drift apart, and eventually one of them lies. The rule for what counts as a
+            sellable item lived in six places; I collapsed it into one shared predicate. The vendor-documents check had
+            seven readers that had drifted apart; they now all go through one helper. Both are guarded by tests that I
+            checked fail when the rule regresses.
           </p>
         </CasePoint>
       </CaseSection>
 
       <CaseSection num="04" label="What broke" title="What broke during live fairs, and the fixes">
-        <p>
-          Most of these only showed up under real load at live fairs, when many people did things at the same time.{" "}
-          <Todo>confirm details and numbers for each</Todo>
-        </p>
+        <p>These came up during live fair operations.</p>
         <CasePoint title="Check-then-act on vendor status">
           <p>
-            A vendor&apos;s status was read in one step and acted on in another. Two requests close together could both
-            pass the check before either one changed anything. Fixed by making the check and the change a single atomic
-            update in the database, so only one of them can win. <Todo>confirm the fix</Todo>
+            A race between checking a vendor&apos;s status and acting on it. <Todo>real fix</Todo>
           </p>
         </CasePoint>
         <CasePoint title="Refund versus payout">
           <p>
-            A refund and a payout for the same order could run at the same time, so money could go out to a vendor for
-            an order that was being refunded. Fixed by making every money movement for an order go through one place, in
-            order, and having payouts skip orders with a refund in progress. <Todo>confirm the fix</Todo>
+            A race between a refund and a payout for the same order. <Todo>real fix</Todo>
           </p>
         </CasePoint>
         <CasePoint title="A transfer sent but not marked">
           <p>
-            Stripe confirmed a transfer, but the record saying so was not saved. A retry could then try to pay the same
-            vendor twice. Fixed by recording the intent before calling Stripe, using an idempotency key so a repeat call
-            cannot create a second transfer, and reconciling anything left half-done.{" "}
-            <Todo>confirm the fix</Todo>
+            A transfer went out but was not recorded as sent. <Todo>real fix</Todo>
           </p>
         </CasePoint>
         <CasePoint title="A timer that fired far too early">
           <p>
-            A job scheduled after an order was placed ran far earlier than it should have.{" "}
-            <Todo>confirm how early, the cause, and the fix</Todo>
+            A timer armed at order placement fired about 128 seconds later, far earlier than it should have. I widened it
+            to 10 minutes and stopped arming it when the fair isn&apos;t open.
           </p>
         </CasePoint>
       </CaseSection>
