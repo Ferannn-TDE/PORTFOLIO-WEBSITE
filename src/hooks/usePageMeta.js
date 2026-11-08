@@ -2,9 +2,10 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-export const DEFAULT_TITLE = "Feran Odedairo — Software Engineer";
-export const DEFAULT_DESCRIPTION =
-  "Feran Odedairo, software engineer and CS student building full-stack products that hold up when real people use them.";
+import { routeMeta } from "@/content/routeMeta";
+
+export const DEFAULT_TITLE = routeMeta["/"].title;
+export const DEFAULT_DESCRIPTION = routeMeta["/"].description;
 
 function setMeta(name, content, attr = "name") {
   let el = document.head.querySelector(`meta[${attr}="${name}"]`);
@@ -36,13 +37,17 @@ function setCanonical(href) {
 export function usePageMeta({ title = DEFAULT_TITLE, description = DEFAULT_DESCRIPTION, noindex = false } = {}) {
   const { pathname } = useLocation();
   useEffect(() => {
-    const url = `${__SITE_URL__}${pathname}`;
+    // One URL per page: /work/fairsynq/ and /work/fairsynq share a canonical.
+    const path = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+    const url = `${__SITE_URL__}${path}`;
     document.title = title;
     setMeta("description", description);
     setMeta("robots", noindex ? "noindex" : null);
     setMeta("og:title", title, "property");
     setMeta("og:description", description, "property");
     setMeta("og:url", url, "property");
+    setMeta("twitter:title", title);
+    setMeta("twitter:description", description);
     if (noindex) document.head.querySelector('link[rel="canonical"]')?.remove();
     else setCanonical(url);
   }, [title, description, noindex, pathname]);

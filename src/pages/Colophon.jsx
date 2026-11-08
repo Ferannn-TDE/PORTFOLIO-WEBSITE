@@ -6,6 +6,7 @@ import { CaseSection } from "@/components/case/parts";
 import { HEAVY_COST } from "@/components/Pathfinder/algorithms";
 import { site } from "@/data/site";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { routeMeta } from "@/content/routeMeta";
 import { useReveal } from "@/hooks/useReveal";
 import { analyticsEnabled } from "@/lib/analytics";
 
@@ -62,10 +63,7 @@ function Table({ rows, cols }) {
 }
 
 export default function Colophon() {
-  usePageMeta({
-    title: "Colophon — Feran Odedairo",
-    description: "How this site is built: type, colour, stack, how the pathfinder works, and accessibility notes.",
-  });
+  usePageMeta(routeMeta["/colophon"]);
   useReveal();
 
   return (

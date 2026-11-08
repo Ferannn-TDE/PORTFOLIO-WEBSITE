@@ -10,8 +10,6 @@ export const meta = {
   slug: "fairsynq",
   title: "FairSynq",
   summary: "A multi-vendor ordering platform for live fairs, built solo.",
-  description:
-    "Case study: FairSynq, a multi-vendor ordering platform for live fairs. Architecture, payout design, and the race conditions found during live operations.",
   facts: [
     { label: "Role", value: "Solo developer", todo: "confirm wording" },
     { label: "Stack", value: "Next.js · TypeScript · Supabase (Postgres) · Prisma · Clerk · Stripe Connect · BullMQ · Redis · Firebase" },

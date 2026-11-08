@@ -5,6 +5,8 @@ import path from "path";
 import { readFileSync } from "fs";
 import { caseStudySlugs } from "./src/content/caseStudies/slugs.js";
 import { scanTodos, formatTodos } from "./scripts/check-todos.mjs";
+import { applyRouteMeta, routeFile } from "./scripts/route-html.mjs";
+import { routeMeta } from "./src/content/routeMeta.js";
 
 // ---------------------------------------------------------------------------
 // The site's public URL. Used for the canonical link, Open Graph tags, the
@@ -15,12 +17,7 @@ const DEFAULT_SITE_URL = "https://ferans-portfolio-website.netlify.app";
 // Pages listed in the sitemap.
 const ROUTES = ["/", ...caseStudySlugs.map((slug) => `/work/${slug}`), "/colophon"];
 
-const SITE = {
-  title: "Feran Odedairo — Software Engineer",
-  description:
-    "Feran Odedairo, software engineer and CS student building full-stack products that hold up when real people use them.",
-  ogImage: "/og.png",
-};
+const SITE = { ...routeMeta["/"], ogImage: "/og.png" };
 
 // Installed versions, shown on the colophon page. Read at build time so the
 // page never states a version that isn't actually shipped.
@@ -74,6 +71,9 @@ function seo(siteUrl) {
         meta({ property: "og:image:height", content: "630" }),
         meta({ property: "og:image:alt", content: "Feran Odedairo, software engineer, set over a dot grid." }),
         meta({ name: "twitter:card", content: "summary_large_image" }),
+        meta({ name: "twitter:title", content: SITE.title }),
+        meta({ name: "twitter:description", content: SITE.description }),
+        meta({ name: "twitter:image", content: abs(SITE.ogImage) }),
       ];
     },
     generateBundle() {
@@ -88,6 +88,30 @@ function seo(siteUrl) {
         fileName: "robots.txt",
         source: `User-agent: *\nAllow: /\n\nSitemap: ${abs("/sitemap.xml")}\n`,
       });
+    },
+  };
+}
+
+// After index.html is final, write a copy per route (work/fairsynq/index.html,
+// colophon/index.html, 404.html) carrying that route's title, description,
+// canonical, og: and twitter: tags. Netlify serves these real files before
+// the rewrite rules, so link previews and crawlers see the right page; the
+// app then boots exactly as it does from index.html.
+function routePages(siteUrl) {
+  return {
+    name: "route-pages",
+    enforce: "post",
+    generateBundle: {
+      order: "post",
+      handler(_, bundle) {
+        const index = bundle["index.html"];
+        if (!index) this.error("route-pages: index.html missing from the bundle");
+        const html = String(index.source);
+        for (const [path, meta] of Object.entries(routeMeta)) {
+          if (path === "/") continue;
+          this.emitFile({ type: "asset", fileName: routeFile(path), source: applyRouteMeta(html, { siteUrl, path, ...meta }) });
+        }
+      },
     },
   };
 }
@@ -141,7 +165,7 @@ export default defineConfig(({ mode }) => {
   const strictTodos = env.STRICT_TODOS === "1";
 
   return {
-    plugins: [react(), tailwindcss(), preloadFonts(), seo(siteUrl), todoGuard(strictTodos), localFunctions(env)],
+    plugins: [react(), tailwindcss(), preloadFonts(), seo(siteUrl), routePages(siteUrl), todoGuard(strictTodos), localFunctions(env)],
     define: {
       __STACK_VERSIONS__: JSON.stringify(versions),
       __SITE_URL__: JSON.stringify(siteUrl),

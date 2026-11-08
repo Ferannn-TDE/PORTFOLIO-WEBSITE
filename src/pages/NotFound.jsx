@@ -2,14 +2,11 @@ import { Link } from "react-router-dom";
 import Nav from "@/components/Nav";
 import MiniPathfinder from "@/components/MiniPathfinder";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { routeMeta } from "@/content/routeMeta";
 import { openPalette } from "@/lib/palette";
 
 export default function NotFound() {
-  usePageMeta({
-    title: "Path not found — Feran Odedairo",
-    description: "This page doesn't exist. Head back to the home page or search the site.",
-    noindex: true,
-  });
+  usePageMeta(routeMeta["/404"]);
   return (
     <>
       <Nav />

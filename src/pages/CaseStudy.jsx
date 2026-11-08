@@ -7,6 +7,7 @@ import Todo from "@/components/Todo";
 import NotFound from "./NotFound";
 import { getCaseStudy } from "@/content/caseStudies";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { routeMeta } from "@/content/routeMeta";
 import { useReveal } from "@/hooks/useReveal";
 import { track } from "@/lib/analytics";
 
@@ -45,7 +46,7 @@ function Facts({ meta }) {
 
 function Page({ mod }) {
   const { meta, Body } = mod;
-  usePageMeta({ title: `${meta.title} case study — Feran Odedairo`, description: meta.description });
+  usePageMeta(routeMeta[`/work/${meta.slug}`]);
   useReveal();
   useEffect(() => track("case-study-open", { slug: meta.slug }), [meta.slug]);
 
