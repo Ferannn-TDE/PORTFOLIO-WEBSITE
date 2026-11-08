@@ -217,7 +217,7 @@ export default function Nav() {
                 scrollToElement(top, { immediate: true });
                 replayIntro();
               }}
-              aria-label="Feran Odedairo, back to top and replay intro"
+              aria-label="fo. — Feran Odedairo, back to top and replay intro"
               className="font-display text-[30px] italic leading-none hover:text-violet-soft"
             >
               fo.
@@ -233,7 +233,7 @@ export default function Nav() {
           <button
             type="button"
             onClick={openPalette}
-            aria-label="Open command palette"
+            aria-label={`${paletteShortcut()} — open command palette`}
             aria-keyshortcuts="Meta+K Control+K"
             className="hidden h-11 items-center px-2 font-mono text-[11px] tracking-[0.08em] text-cream/70 hover:text-violet-soft md:flex"
           >
