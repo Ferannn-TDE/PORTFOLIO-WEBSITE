@@ -10,7 +10,7 @@ export const log = [
     when: "Feb 2024 – present",
   },
   {
-    role: "Resident Advisor",
+    role: "Resident Assistant",
     org: "SIUE University Housing",
     when: "2024 — now",
   },
