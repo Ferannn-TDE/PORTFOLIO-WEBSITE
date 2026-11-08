@@ -7,6 +7,7 @@ import { HEAVY_COST } from "@/components/Pathfinder/algorithms";
 import { site } from "@/data/site";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useReveal } from "@/hooks/useReveal";
+import { analyticsEnabled } from "@/lib/analytics";
 
 const v = __STACK_VERSIONS__;
 
@@ -173,7 +174,9 @@ export default function Colophon() {
             Mobile scores from the live site: <Todo>fill after deploy</Todo>
           </p>
           <p>
-            Analytics: none at the moment. <Todo>update in phase 7</Todo>
+            {analyticsEnabled
+              ? "Analytics: Umami, which sets no cookies and collects no personal data. It loads after the page and counts page views plus a few named events (case study opened, résumé opened, email copied, palette opened, pathfinder run)."
+              : "Analytics: none."}
           </p>
           <p>
             Built by {site.name} in {site.location}.

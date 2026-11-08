@@ -7,8 +7,10 @@ import "@fontsource-variable/jetbrains-mono/wght.css";
 import "./index.css";
 import App from "./App.jsx";
 import { initScroll } from "./lib/scroll";
+import { loadAnalytics } from "./lib/analytics";
 
 initScroll();
+loadAnalytics();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
