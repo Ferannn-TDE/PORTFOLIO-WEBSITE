@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = "dist"
 
+# Production deploys refuse to build while visible [TODO] markers remain.
+# Deploy previews, branch deploys and drafts are not affected.
+[context.production.environment]
+  STRICT_TODOS = "1"
+
 # Client-side routes. Netlify serves real files (assets, previews, the résumé)
 # before these rules, and /.netlify/functions/* is never rewritten.
 #

@@ -3,6 +3,24 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import { readFileSync } from "fs";
+import { caseStudySlugs } from "./src/content/caseStudies/slugs.js";
+import { scanTodos, formatTodos } from "./scripts/check-todos.mjs";
+
+// ---------------------------------------------------------------------------
+// The site's public URL. Used for the canonical link, Open Graph tags, the
+// sitemap and robots.txt. To switch domains, set SITE_URL in Netlify (or .env),
+// or change this default. Nothing else needs editing.
+const DEFAULT_SITE_URL = "https://ferans-portfolio-website.netlify.app";
+
+// Pages listed in the sitemap.
+const ROUTES = ["/", ...caseStudySlugs.map((slug) => `/work/${slug}`), "/colophon"];
+
+const SITE = {
+  title: "Feran Odedairo — Software Engineer",
+  description:
+    "Feran Odedairo, software engineer and CS student building full-stack products that hold up when real people use them.",
+  ogImage: "/og.png",
+};
 
 // Installed versions, shown on the colophon page. Read at build time so the
 // page never states a version that isn't actually shipped.
@@ -36,6 +54,66 @@ function preloadFonts() {
   };
 }
 
+// Canonical + social tags in index.html, plus sitemap.xml and robots.txt,
+// all built from SITE_URL.
+function seo(siteUrl) {
+  const abs = (p) => `${siteUrl}${p}`;
+  return {
+    name: "seo",
+    transformIndexHtml() {
+      const meta = (attrs) => ({ tag: "meta", attrs, injectTo: "head" });
+      return [
+        { tag: "link", attrs: { rel: "canonical", href: abs("/") }, injectTo: "head" },
+        meta({ property: "og:type", content: "website" }),
+        meta({ property: "og:site_name", content: "Feran Odedairo" }),
+        meta({ property: "og:title", content: SITE.title }),
+        meta({ property: "og:description", content: SITE.description }),
+        meta({ property: "og:url", content: abs("/") }),
+        meta({ property: "og:image", content: abs(SITE.ogImage) }),
+        meta({ property: "og:image:width", content: "1200" }),
+        meta({ property: "og:image:height", content: "630" }),
+        meta({ property: "og:image:alt", content: "Feran Odedairo, software engineer, set over a dot grid." }),
+        meta({ name: "twitter:card", content: "summary_large_image" }),
+      ];
+    },
+    generateBundle() {
+      const urls = ROUTES.map((r) => `  <url><loc>${abs(r)}</loc></url>`).join("\n");
+      this.emitFile({
+        type: "asset",
+        fileName: "sitemap.xml",
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+      });
+      this.emitFile({
+        type: "asset",
+        fileName: "robots.txt",
+        source: `User-agent: *\nAllow: /\n\nSitemap: ${abs("/sitemap.xml")}\n`,
+      });
+    },
+  };
+}
+
+// Production builds fail while visible TODO markers remain. Strict mode is on
+// when STRICT_TODOS=1 (set for Netlify's production context in netlify.toml,
+// and by `npm run build:prod`). Drafts, previews and dev builds are allowed.
+function todoGuard(strict) {
+  return {
+    name: "todo-guard",
+    apply: "build",
+    generateBundle(_, bundle) {
+      if (!strict) return;
+      const result = scanTodos();
+      const inBundle = Object.values(bundle).some((c) => c.type === "chunk" && c.code.includes("[TODO"));
+      if (result.visible.length || inBundle) {
+        this.error(
+          `Visible TODO markers remain; production build stopped.\n\n${formatTodos(result)}\n` +
+            (inBundle && !result.visible.length ? "\nThe built bundle still contains a [TODO marker.\n" : "") +
+            "\nResolve them, or build a draft without STRICT_TODOS=1."
+        );
+      }
+    },
+  };
+}
+
 // Serves the GitHub activity Netlify Function locally (vite dev / preview) by
 // calling the same handler, so the strip can be checked without netlify dev.
 // Note: this does not emulate Netlify's CDN cache.
@@ -55,16 +133,23 @@ function localFunctions(env) {
 }
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => ({
-  // GITHUB_TOKEN is loaded for the local function middleware only (Node side).
-  // Only VITE_-prefixed variables ever reach the browser bundle.
-  plugins: [react(), tailwindcss(), preloadFonts(), localFunctions(loadEnv(mode, process.cwd(), ""))],
-  define: {
-    __STACK_VERSIONS__: JSON.stringify(versions),
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+export default defineConfig(({ mode }) => {
+  // GITHUB_TOKEN and SITE_URL are read on the Node side only. Only
+  // VITE_-prefixed variables (and the values in `define`) reach the browser.
+  const env = { ...loadEnv(mode, process.cwd(), ""), ...process.env };
+  const siteUrl = (env.SITE_URL || DEFAULT_SITE_URL).replace(/\/+$/, "");
+  const strictTodos = env.STRICT_TODOS === "1";
+
+  return {
+    plugins: [react(), tailwindcss(), preloadFonts(), seo(siteUrl), todoGuard(strictTodos), localFunctions(env)],
+    define: {
+      __STACK_VERSIONS__: JSON.stringify(versions),
+      __SITE_URL__: JSON.stringify(siteUrl),
     },
-  },
-}));
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+    },
+  };
+});
