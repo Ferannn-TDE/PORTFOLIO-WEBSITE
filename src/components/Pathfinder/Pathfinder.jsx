@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { algorithms } from "./algorithms";
 import { presets } from "./presets";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { onIntroDone } from "@/lib/motion";
 import "./pathfinder.css";
 
 const ALGOS = [
@@ -36,8 +37,10 @@ function timeSearch(fn, grid, start, target) {
   return { result, ms: elapsed / runs };
 }
 
-export default function Pathfinder({ autoRun = true, autoRunDelay = 700, commandEvent = "pathfinder:command" }) {
+export default function Pathfinder({ autoRun = true, commandEvent = "pathfinder:command" }) {
   const narrow = useMediaQuery("(max-width: 639px)");
+  const coarse = useMediaQuery("(pointer: coarse)");
+  const [drawMode, setDrawMode] = useState(false);
   const preset = narrow ? presets.narrow : presets.wide;
 
   const [algo, setAlgo] = useState("bfs");
@@ -100,16 +103,17 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
   const reset = () => {
     setWalls(new Set(preset.walls));
     setRun(null);
+    setDrawMode(false);
   };
 
-  // First route so the hero is never static.
+  // First route once the intro is out of the way (or right away if it was
+  // skipped), so the hero is never static. Replaying the intro runs it again.
+  const routeRef = useRef(route);
+  routeRef.current = route;
   useEffect(() => {
     if (!autoRun) return;
-    const id = setTimeout(() => route(preset.defaultTarget), autoRunDelay);
-    return () => clearTimeout(id);
-    // Run once per layout, not on every state change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoRun, autoRunDelay, preset]);
+    return onIntroDone(() => routeRef.current(preset.defaultTarget));
+  }, [autoRun, preset]);
 
   // External commands (command palette): { type: "algo", value } or { type: "route" }.
   const latest = useRef({});
@@ -132,12 +136,16 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
     return i === undefined ? null : Number(i);
   };
 
+  // Mouse: press-and-drag paints walls, a plain click sets the target.
+  // Touch/pen: the page keeps scrolling; a tap sets the target, or toggles a
+  // wall while "Draw walls" is on.
   const onPointerDown = (e) => {
     const cell = e.target.dataset?.cell;
     if (cell === undefined || e.button !== 0) return;
-    e.currentTarget.setPointerCapture(e.pointerId);
     const c = Number(cell);
-    drag.current = { origin: c, last: c, painting: false, mode: !walls.has(c), walls: new Set(walls) };
+    const mouse = e.pointerType === "mouse";
+    if (mouse) e.currentTarget.setPointerCapture(e.pointerId);
+    drag.current = { origin: c, last: c, painting: false, mouse, mode: !walls.has(c), walls: new Set(walls) };
   };
 
   // Toggle one cell in the drag's working copy; the start and target stay open.
@@ -151,7 +159,7 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
 
   const onPointerMove = (e) => {
     const d = drag.current;
-    if (!d) return;
+    if (!d || !d.mouse) return;
     const c = cellAt(e.clientX, e.clientY);
     if (c === null || c === d.last) return;
     let changed = false;
@@ -170,6 +178,15 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
     if (!d) return;
     if (d.painting) {
       if (run) route(run.target, { walls: d.walls });
+      return;
+    }
+    if (!d.mouse && drawMode) {
+      if (d.origin === preset.start || d.origin === run?.target) return;
+      const next = new Set(walls);
+      if (next.has(d.origin)) next.delete(d.origin);
+      else next.add(d.origin);
+      setWalls(next);
+      if (run) route(run.target, { walls: next });
       return;
     }
     if (walls.has(d.origin)) {
@@ -208,7 +225,7 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
     ? "click any square to route"
     : `visited ${s.visited} · ${s.found ? `path ${s.steps}` : "no path"}${
         s.found && s.algo !== "bfs" ? ` · cost ${s.cost}` : ""
-      } · ${s.ms.toFixed(s.ms < 0.1 ? 3 : 2)} ms`;
+      } · ${s.ms.toFixed(s.ms < 0.1 ? 3 : 2)} ms avg`;
 
   return (
     <div className="pf min-w-0 border border-hairline-night bg-black/30 font-mono">
@@ -233,7 +250,8 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
 
       <div
         aria-hidden="true"
-        className="pf-grid p-4 sm:p-6"
+        data-cursor="click"
+        className={`pf-grid p-4 sm:p-6 ${coarse ? "" : "pf-grid-mouse"}`}
         style={{ gridTemplateColumns: `repeat(${preset.cols}, minmax(0, 1fr))` }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -249,7 +267,17 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
         <span aria-live="polite" className="min-h-[1.5em]">
           {statText}
         </span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          {coarse && (
+            <button
+              type="button"
+              aria-pressed={drawMode}
+              onClick={() => setDrawMode((m) => !m)}
+              className="pf-btn h-9 border border-cream/30 px-3 text-[11px] uppercase tracking-[0.12em]"
+            >
+              Draw walls
+            </button>
+          )}
           <button type="button" onClick={newRoute} className="pf-btn h-9 border border-cream/30 px-3 text-[11px] uppercase tracking-[0.12em]">
             New route ↻
           </button>
@@ -262,7 +290,7 @@ export default function Pathfinder({ autoRun = true, autoRunDelay = 700, command
         <span className="inline-flex items-center gap-2">
           <span className="pf-legend-heavy" /> heavy · cost 5{algo === "bfs" ? " (BFS ignores it)" : ""}
         </span>
-        <span>drag to draw walls</span>
+        <span>{coarse ? "tap “Draw walls”, then tap cells" : "drag to draw walls"}</span>
       </p>
     </div>
   );
