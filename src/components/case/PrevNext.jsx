@@ -1,16 +1,6 @@
 import { Link } from "react-router-dom";
-import { projects, projectLink } from "@/data/projects";
-
-// Previous / next among projects that have somewhere to go (case study or
-// repo). Projects without a link are skipped, so this never makes a dead link.
-function neighbours(slug) {
-  const linked = projects.filter((p) => projectLink(p));
-  const i = linked.findIndex((p) => p.slug === slug);
-  if (i === -1 || linked.length < 2) return [];
-  const prev = linked[(i - 1 + linked.length) % linked.length];
-  const next = linked[(i + 1) % linked.length];
-  return prev === next ? [["Next", next]] : [["Previous", prev], ["Next", next]];
-}
+import { projectLink } from "@/data/projects";
+import { neighbours } from "@/lib/projectNav";
 
 function ProjectLink({ dir, p }) {
   const inner = (

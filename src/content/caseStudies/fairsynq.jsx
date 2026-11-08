@@ -12,13 +12,11 @@ export const meta = {
   summary: "A multi-vendor ordering platform for live fairs, built solo.",
   facts: [
     { label: "Role", value: "Solo developer", todo: "confirm wording" },
-    { label: "Stack", value: "Next.js · TypeScript · Supabase (Postgres) · Prisma · Clerk · Stripe Connect · BullMQ · Redis · Firebase" },
+    { label: "Stack", value: "Next.js · TypeScript · Supabase (Postgres) · Prisma · Clerk · Stripe Connect · BullMQ · Redis · Firebase", wide: true },
     { label: "Year", value: null, todo: "year(s) built" },
   ],
-  links: [
-    // TODO: live link — confirm with the client before publishing. Final: https://www.fairsynq.com, labelled "demo".
-    { label: "Live demo", href: null, todo: "live link — confirm with client before publishing" },
-  ],
+  // Shown until the live link is confirmed and set as `live` in src/data/projects.js.
+  pendingLinks: [{ label: "Live demo", todo: "live link — confirm with client before publishing" }],
 };
 
 export function Body() {

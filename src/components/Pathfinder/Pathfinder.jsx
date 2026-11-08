@@ -38,13 +38,13 @@ function timeSearch(fn, grid, start, target) {
   return { result, ms: elapsed / runs };
 }
 
-export default function Pathfinder({ autoRun = true, commandEvent = "pathfinder:command" }) {
+export default function Pathfinder({ autoRun = true, initialAlgo = "bfs", commandEvent = "pathfinder:command" }) {
   const narrow = useMediaQuery("(max-width: 639px)");
   const coarse = useMediaQuery("(pointer: coarse)");
   const [drawMode, setDrawMode] = useState(false);
   const preset = narrow ? presets.narrow : presets.wide;
 
-  const [algo, setAlgo] = useState("bfs");
+  const [algo, setAlgo] = useState(initialAlgo);
   const [walls, setWalls] = useState(() => new Set(preset.walls));
   const [run, setRun] = useState(null); // { id, target, depth: Map, pathIdx: Map, maxDepth, stats }
   const runId = useRef(0);

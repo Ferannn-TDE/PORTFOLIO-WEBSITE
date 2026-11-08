@@ -19,6 +19,31 @@
   status = 200
 
 [[redirects]]
+  from = "/work/cougar-connection"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/work/campus-routing"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/work/http-proxy"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/work/safesite"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/work/ra-scheduler"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/colophon"
   to = "/index.html"
   status = 200
