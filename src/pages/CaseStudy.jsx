@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PrevNext from "@/components/case/PrevNext";
-import Todo from "@/components/Todo";
 import NotFound from "./NotFound";
 import { getCaseStudy } from "@/content/caseStudies";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -13,26 +12,21 @@ import { track } from "@/lib/analytics";
 import { projects } from "@/data/projects";
 
 // Header facts. Links come from the project data (src/data/projects.js):
-// "Live demo" when `live` is set, "Repository" when `repo` is set.
+// "Demo" when `live` is set, "Repository" when `repo` is set.
 function Facts({ meta, project }) {
   const links = [
-    project?.live && { label: "Live demo", href: project.live },
+    project?.live && { label: "Demo", href: project.live },
     project?.repo && { label: "Repository", href: project.repo },
   ].filter(Boolean);
-  const pending = meta.pendingLinks ?? [];
   return (
     <dl className="grid gap-x-10 gap-y-6 border-t border-hairline-night pt-8 sm:grid-cols-2 lg:grid-cols-4">
       {meta.facts.map((f) => (
         <div key={f.label} className={f.wide ? "lg:col-span-2" : undefined}>
           <dt className="label">{f.label}</dt>
-          <dd className="mt-2 text-[16px] leading-[1.6]">
-            {f.value}
-            {f.value && f.todo && " "}
-            {f.todo && <Todo>{f.todo}</Todo>}
-          </dd>
+          <dd className="mt-2 text-[16px] leading-[1.6]">{f.value}</dd>
         </div>
       ))}
-      {(links.length > 0 || pending.length > 0) && (
+      {links.length > 0 && (
         <div>
           <dt className="label">Links</dt>
           <dd className="mt-2 flex flex-col gap-1 text-[16px] leading-[1.6]">
@@ -40,11 +34,6 @@ function Facts({ meta, project }) {
               <a key={l.label} className="link-underline w-fit" href={l.href} target="_blank" rel="noopener noreferrer">
                 {l.label} ↗
               </a>
-            ))}
-            {pending.map((l) => (
-              <span key={l.label}>
-                {l.label} <Todo>{l.todo}</Todo>
-              </span>
             ))}
           </dd>
         </div>

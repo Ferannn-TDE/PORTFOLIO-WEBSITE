@@ -11,7 +11,7 @@ export const projects = [
     stack: ["Next.js · TypeScript", "Supabase · Stripe Connect", "BullMQ · Clerk"],
     href: "/work/fairsynq",
     repo: null,
-    live: null, // TODO: live link, confirm with the client first. Final: https://www.fairsynq.com
+    live: "https://www.fairsynq.com", // client approved
   },
   {
     slug: "cougar-connection",

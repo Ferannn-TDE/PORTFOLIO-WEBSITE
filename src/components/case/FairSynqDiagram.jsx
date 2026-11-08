@@ -8,9 +8,9 @@ import { svgId } from "@/lib/svgId";
 const DESC =
   "People (customers, vendors, runners and organizers) use a Next.js app hosted on Vercel. " +
   "The app uses Clerk for sign-in and roles, Postgres on Supabase through Prisma for data, " +
-  "Stripe Connect for payments with separate charges and transfers, and Firebase to push live order status. " +
-  "The app puts scheduling and payout jobs on a Redis queue, which a BullMQ worker processes; " +
-  "the worker updates Postgres and creates Stripe transfers. Firebase sends live status back to people.";
+  "Stripe Connect for payments with separate charges and transfers, and writes live order status to Firebase Realtime Database. " +
+  "The app puts order scheduling, order-acceptance timeout and payout jobs on a Redis queue, which a BullMQ worker processes; " +
+  "the worker updates Postgres and creates Stripe transfers. Firebase pushes live status back to people.";
 
 function Wide({ ids }) {
   const m = `${ids}-m`;
@@ -24,7 +24,7 @@ function Wide({ ids }) {
       <Box x={660} y={20} w={280} h={64} title="Clerk" sub="sign-in, multi-role auth" />
       <Box x={660} y={110} w={280} h={64} title="Postgres" sub="Supabase, via Prisma" />
       <Box x={660} y={200} w={280} h={64} title="Stripe Connect" sub="separate charges and transfers" />
-      <Box x={660} y={290} w={280} h={64} title="Firebase" sub="realtime order status" />
+      <Box x={660} y={290} w={280} h={64} title="Firebase" sub="Realtime Database: order status" />
       <Box x={300} y={350} w={230} h={72} title="BullMQ worker" sub={["Redis queue:", "scheduling, payouts"]} />
 
       <Edge d="M210,220 L298,220" marker={m} />
@@ -46,7 +46,7 @@ function Stacked({ ids }) {
     ["Clerk", "sign-in, multi-role auth"],
     ["Postgres", "Supabase, via Prisma"],
     ["Stripe Connect", "charges and transfers"],
-    ["Firebase", "realtime order status"],
+    ["Firebase", "Realtime DB: order status"],
   ];
   return (
     <svg viewBox="0 0 340 700" role="img" aria-labelledby={`${ids}-t ${ids}-d`} className="h-auto w-full">
