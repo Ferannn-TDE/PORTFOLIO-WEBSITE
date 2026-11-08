@@ -125,7 +125,7 @@ export default function Readme() {
           ( Readme )
         </h2>
         <p data-reveal className="text-[clamp(24px,4.4vw,32px)] font-light leading-[1.6] tracking-[-0.02em]">
-          I’m Feran, a computer science student at{" "}
+          Hi, I’m Feran. I’m finishing my computer science degree at{" "}
           <Peek {...p} href="#log" word="SIUE" file="siue.yml">
             <L>
               <K>degree:</K> B.S./M.S. Computer Science
@@ -137,17 +137,17 @@ export default function Readme() {
               <K>b.s.:</K> Dec 2026
             </L>
             <L c># Meridian Scholar</L>
-          </Peek>{" "}
-          who likes the unglamorous parts of software: payouts that reconcile, queues that don’t drop orders, and
-          interfaces people can use without a manual. I build{" "}
+          </Peek>
+          , and the work I enjoy most is the part nobody notices: money that adds up, orders that don’t get lost, and
+          screens people understand without help. Mostly I build{" "}
           <Peek {...p} href="#work" word="full‑stack products" file="fairsynq.ts">
             <L>
               <K>type</K> FairSynq = Marketplace&lt;
             </L>
             <L>{"  "}Vendor, Organizer, Fair&gt;</L>
             <L c>// Next.js · Supabase · Stripe Connect</L>
-          </Peek>
-          , write{" "}
+          </Peek>{" "}
+          for real users, and sometimes{" "}
           <Peek {...p} href="#work" word="low‑level networking code" file="proxy.cpp">
             <L>
               recv() <K>→</K> relay() <K>→</K> FIN
@@ -157,7 +157,7 @@ export default function Readme() {
             </L>
             <L c>// C++ · Winsock · one thread per direction</L>
           </Peek>
-          , and test the things I ship — a habit from my QA internship at{" "}
+          , just to see how things work underneath. I test everything I ship. That habit came from my internship at{" "}
           <Peek {...p} href="#log" word="ReliaQuest" file="internship.md">
             <L>
               <K>role:</K> QA / Automation intern
@@ -166,7 +166,7 @@ export default function Readme() {
               <K>team:</K> 20 engineers, distributed
             </L>
           </Peek>
-          .
+          , and it stuck.
         </p>
         <p data-reveal className="label !text-[12px]">
           {touch ? "Tap" : "Hover"} the underlined words to peek inside
