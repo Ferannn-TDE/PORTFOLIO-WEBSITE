@@ -3,14 +3,14 @@ import { projects, smallerBuilds, projectLink } from "@/data/projects";
 import { site } from "@/data/site";
 
 const rowClass =
-  "row group -mx-4 grid grid-cols-[40px_minmax(0,1fr)] gap-x-4 gap-y-4 border-t border-hairline px-4 py-9 md:grid-cols-[48px_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-x-8";
+  "row group relative -mx-4 grid grid-cols-[40px_minmax(0,1fr)] gap-x-4 gap-y-4 border-t border-hairline px-4 py-9 md:grid-cols-[48px_minmax(0,1fr)_minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-x-8";
 
 function RowBody({ p, n, linked }) {
   return (
     <>
       <span className="pt-2.5 font-mono text-[13px] text-muted">{String(n).padStart(2, "0")}</span>
       <div className="flex min-w-0 flex-col gap-2">
-        <span className="row-title font-display text-[clamp(32px,6vw,40px)] leading-[1.05]">{p.title}</span>
+        <span className="row-title inline-block origin-left font-display text-[clamp(32px,6vw,40px)] leading-[1.05]">{p.title}</span>
         <span className="font-mono text-[12px] uppercase tracking-[0.1em] text-muted">{p.tag}</span>
       </div>
       <p className="col-start-2 pt-1.5 text-[18px] leading-[1.6] text-ink-2 md:col-start-auto">{p.description}</p>
@@ -36,21 +36,21 @@ function Row({ p, n }) {
   const url = projectLink(p);
   if (!url) {
     return (
-      <div className={rowClass}>
+      <div data-reveal className={rowClass}>
         <RowBody p={p} n={n} linked={false} />
       </div>
     );
   }
   if (p.href) {
     return (
-      <Link to={p.href} className={rowClass}>
+      <Link data-reveal data-cursor="open →" to={p.href} className={rowClass}>
         <RowBody p={p} n={n} linked />
         <span className="sr-only">Read the case study</span>
       </Link>
     );
   }
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer" className={rowClass}>
+    <a data-reveal data-cursor="open ↗" href={url} target="_blank" rel="noopener noreferrer" className={rowClass}>
       <RowBody p={p} n={n} linked />
       <span className="sr-only">(GitHub repository, opens in a new tab)</span>
     </a>
@@ -60,7 +60,7 @@ function Row({ p, n }) {
 export default function Work() {
   return (
     <section id="work" aria-labelledby="work-h" className="shell pb-[120px] pt-10">
-      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-8">
+      <div data-reveal className="flex flex-wrap items-baseline justify-between gap-4 pb-8">
         <h2 id="work-h" className="label">
           ( 01 — The work )
         </h2>
@@ -71,7 +71,7 @@ export default function Work() {
           <Row key={p.slug} p={p} n={i + 1} />
         ))}
       </div>
-      <p className="mt-7 font-mono text-[13px] tracking-[0.06em] text-muted">
+      <p data-reveal className="mt-7 font-mono text-[13px] tracking-[0.06em] text-muted">
         Smaller builds:{" "}
         {smallerBuilds.map((b, i) => (
           <span key={b.title}>

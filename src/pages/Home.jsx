@@ -6,8 +6,10 @@ import Log from "@/components/Log";
 import Stack from "@/components/Stack";
 import Marquee from "@/components/Marquee";
 import Footer from "@/components/Footer";
+import { useReveal } from "@/hooks/useReveal";
 
 export default function Home() {
+  useReveal();
   return (
     <>
       <a

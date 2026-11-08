@@ -22,6 +22,7 @@ function CopyEmail() {
     <button
       type="button"
       onClick={copy}
+      data-cursor="copy"
       className="min-h-11 font-mono text-[12px] uppercase tracking-[0.14em] text-cream/70 hover:text-violet-soft"
     >
       <span aria-live="polite">{state === "copied" ? "Copied ✓" : state === "failed" ? "Copy failed" : "Copy email"}</span>
@@ -36,9 +37,13 @@ export default function Footer() {
     <footer id="contact" className="on-night dot-grid bg-night px-4 pb-10 pt-[120px] text-cream md:px-10">
       <div className="mx-auto flex max-w-[1160px] flex-col gap-9">
         <p className="label">( exit 0 )</p>
-        <h2 className="max-w-[12ch] font-display text-[clamp(56px,11vw,96px)] font-normal leading-[1.02] tracking-[-0.02em]">
+        <h2 data-reveal="words" className="max-w-[12ch] font-display text-[clamp(56px,11vw,96px)] font-normal leading-[1.02] tracking-[-0.02em]">
           {words.map((w, i) => (
-            <span key={w} className={`footer-word inline-block ${i === words.length - 1 ? "italic" : ""}`}>
+            <span
+              key={w}
+              className={`footer-word inline-block ${i === words.length - 1 ? "italic" : ""}`}
+              style={{ "--i": i }}
+            >
               {w}
               {i < words.length - 1 && " "}
             </span>

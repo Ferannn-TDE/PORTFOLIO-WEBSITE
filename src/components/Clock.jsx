@@ -27,7 +27,7 @@ export default function Clock({ dot = true, className = "" }) {
 
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      {dot && <span className="pulse inline-block size-[7px] rounded-full bg-ok" aria-hidden="true" />}
+      {dot && <span className="pulse relative inline-block size-[7px] rounded-full bg-ok" aria-hidden="true" />}
       <span>{site.location}</span>
       <span aria-hidden="true">·</span>
       <time aria-label={`Local time ${time}, Central`}>
