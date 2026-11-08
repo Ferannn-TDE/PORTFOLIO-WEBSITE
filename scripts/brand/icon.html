@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Icon</title>
+<style>
+@font-face { font-family: "Instrument Serif"; font-style: italic; src: url("../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2") format("woff2"); }
+html, body { margin: 0; }
+/* Size comes from ?s=<px>; the mark scales with it. */
+body { background: #1c1838; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+span { font-family: "Instrument Serif", serif; font-style: italic; color: #f4efe6; line-height: 1; letter-spacing: -0.02em; transform: translateY(-4%); }
+</style>
+</head>
+<body>
+<span>fo.</span>
+<script>
+const s = Number(new URLSearchParams(location.search).get("s") || 512);
+document.body.style.width = document.body.style.height = s + "px";
+document.querySelector("span").style.fontSize = Math.round(s * 0.62) + "px";
+</script>
+</body>
+</html>
