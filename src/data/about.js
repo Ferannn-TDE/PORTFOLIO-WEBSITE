@@ -2,12 +2,12 @@ export const log = [
   {
     role: "QA / Automation Intern",
     org: "ReliaQuest — 20‑engineer distributed team",
-    when: "[TODO: dates]",
+    when: "May 2025 – Aug 2025",
   },
   {
     role: "ELIAS Research Fellow",
     org: "SIUE Department of Computer Science",
-    when: "[TODO: dates]",
+    when: "Feb 2024 – present",
   },
   {
     role: "Resident Advisor",
